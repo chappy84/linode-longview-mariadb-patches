@@ -1,0 +1,27 @@
+#!/bin/bash
+set -u
+
+action="${1:-}"
+
+if command -v rpm >/dev/null 2>&1; then
+    DATADIR="$(rpm --eval '%{_datadir}')"
+fi
+if [ -z "$DATADIR" ]; then
+    DATADIR="/usr/share"
+fi
+
+patch_file="$DATADIR/linode-longview-mariadb-fix/longview.patch"
+
+cd /opt/linode/longview || exit 0
+
+patch_apply_method="--forward"
+if [ "$action" = "remove" ]; then
+    patch_apply_method="--reverse"
+fi
+
+if patch --dry-run "$patch_apply_method" -p1 < "$patch_file" >/dev/null 2>&1; then
+    patch "$patch_apply_method" -p1 < "$patch_file"
+    exit "$?"
+fi
+
+exit 0

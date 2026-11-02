@@ -1,0 +1,20 @@
+--- ./Linode/Longview/DataGetter/Applications/MySQL.pm.orig	2026-11-01 21:32:54.367876359 +0000
++++ ./Linode/Longview/DataGetter/Applications/MySQL.pm	2026-11-01 21:37:00.570330207 +0000
+@@ -35,7 +35,7 @@
+ use Linode::Longview::Util qw(:APPLICATIONS slurp_file);
+ 
+ our $DEPENDENCIES = ['Processes.pm'];
+-our $SIGNATURES = ['mysqld'];
++our $SIGNATURES = ['mariadbd'];
+ my $namespace  = 'Applications.MySQL.';
+ 
+ sub get {
+@@ -66,7 +66,7 @@
+ 		}
+ 	}
+ 
+-	my $dbh = DBI->connect_cached( "DBI:mysql:host=localhost;", $creds->{username}, $creds->{password} ) or do {
++	my $dbh = DBI->connect_cached( "DBI:MariaDB:host=localhost;", $creds->{username}, $creds->{password} ) or do {
+ 		return application_error( $dataref, $namespace,
+ 			'Unable to connect to the database: ' . $DBI::errstr,
+ 			2 );
